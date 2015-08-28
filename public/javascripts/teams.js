@@ -1,14 +1,4 @@
-function Teams(element) {
-  var teams = [
-  'Caught Red Hernandez',
-  'Monica\'s Lips, Clinton-Dix',
-  'Turn Down for WATT',
-  'Breezus, King of the Drews',
-  'Felton Sluggers',
-  'The Bomb Threats',
-  'Jeremy\'s Nice Team',
-  'Water Sucks'];
-
+function Teams(element, teams) {
   // TODO This should be configurable
   var teamComposition = ['QB', 'WR', 'WR', 'RB', 'RB', 'TE', 'K', 'DEF', 'BN', 'BN', 'BN', 'BN', 'BN', 'BN', 'BN'];
 

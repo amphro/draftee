@@ -7,16 +7,27 @@ $(function() {
       timer = $('#timer'),
       bidButton = $('#bidPlayer'),
       buyButton = $('#buyPlayer'),
+      submitTeamNamesButton = $('#submitTeamNames'),
       carousel = $('#playerPhotos'),
       selectWinnerModal = $('#selectWinnerModal'),
+      enterTeamNamesModal = $('#enterTeamNamesModal'),
       resetDataButton = $('#resetData');
 
-  var nflData = window.nflData = new NFLData();
-  var teams = window.draftTeams = new Teams('#teamsBody');
-  var transactions = window.transactions = new Transactions('#transBody');
+  var TEAM_NAMES_KEY = 'draftee:teamNames';
+  var teamNames = JSON.parse(window.localStorage.getItem(TEAM_NAMES_KEY));
+  if (teamNames) {
+      initialize();
+  } else {
+      enterTeamNamesModal.modal('show');
+  }
 
-  nflData.loadData(function (count) {
-    console.log('Loaded ' + count + ' NFL Player/Team Records');
+  var nflData, teams, transactions;
+
+  submitTeamNamesButton.on('click', function() {
+      teamNames = $('#teamNames').val().trim().split('\n');
+      window.localStorage.setItem(TEAM_NAMES_KEY, JSON.stringify(teamNames));
+      enterTeamNamesModal.modal('hide');
+      initialize();
   });
 
   // Set some rando nfl thing as the starting images
@@ -26,6 +37,16 @@ $(function() {
   resetDataButton.on('click', function() {
     draftTeams.resetDraftData();
     transactions.resetTransactions();
+  });
+
+  resetDataButton.on('dblclick', function() {
+      if (window.confirm('Are you sure you want to reset ALL data? If you only want to clear transaction data, just press the Reset button once instead of double click.')) {
+        draftTeams.resetDraftData();
+        transactions.resetTransactions();
+        window.localStorage.removeItem(TEAM_NAMES_KEY);
+        window.localStorage.removeItem('draftee:teams');
+        window.location.reload();
+    }
   });
 
   function getResults(query) {
@@ -168,16 +189,30 @@ $(function() {
     }
   });
 
-  $('#picker').typeahead({
-    source: getResults,
-    items: 8,
-    minLength: 1,
-    updater: nominateDraftable
-  });
+  function initialize() {
+    nflData = window.nflData = new NFLData();
+    teams = window.draftTeams = new Teams('#teamsBody', teamNames);
+    transactions = window.transactions = new Transactions('#transBody');
 
-  $('#winningTeam').typeahead({
-    source: teams.getNames(),
-    items: 8,
-    minLength: 1
-  });
+    // No need for the enter teams modal anymore. It causes problems with the
+    // bid modal so just remove it.
+    enterTeamNamesModal.remove();
+
+    nflData.loadData(function (count) {
+      console.log('Loaded ' + count + ' NFL Player/Team Records');
+    });
+
+    $('#picker').typeahead({
+      source: getResults,
+      items: 8,
+      minLength: 1,
+      updater: nominateDraftable
+    });
+
+    $('#winningTeam').typeahead({
+      source: teams.getNames(),
+      items: 8,
+      minLength: 1
+    });
+  }
 });

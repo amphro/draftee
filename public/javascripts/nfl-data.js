@@ -90,7 +90,7 @@ function NFLData() {
   }
 
   function callKimonoAPI(position) {
-    if (NFLData.USE_CACHED_PLAYER_DATA) {
+    if (position == 'DEF' || NFLData.USE_CACHED_PLAYER_DATA) {
       $.getJSON('/cache/_nfl_data/nfl-'+position+'.json', function(data) {
           if (position == 'DEF') {
             getTeams(data);
@@ -117,10 +117,10 @@ function NFLData() {
     if (data.results.collection1) {
       data.results.collection1.forEach(function(player) {
         players.push({
-          name: toFirstLast(player.name.text),
+          name: toFirstLast(player.name),
           number: player.number,
           position: player.position,
-          team: abbrevToTeam(player.team.text)
+          team: abbrevToTeam(player.team)
         });
       });
     }

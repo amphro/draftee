@@ -48,3 +48,7 @@ a, li a {
   text-decoration: line-through;
   color: red;
 }
+
+#teamNames {
+    width: 515px;
+}

@@ -71,3 +71,14 @@ block content
             input(type='text' id='winningAmount' placeholder='$45')
         div.modal-footer
           button#buyPlayer(class="btn btn-primary") Buy Player
+  div#enterTeamNamesModal(class="modal fade" tabindex="-1" role="dialog" aria-hidden="true")
+    div.modal-dialog
+      div.modal-content
+        div.modal-header
+          h4.modal-title Enter Team Names
+        div.modal-body
+          div.input-group
+            label Enter each team on a separate line
+            textarea(id='teamNames' rows='15' cols='500')
+        div.modal-footer
+          button#submitTeamNames(class="btn btn-primary") Submit
